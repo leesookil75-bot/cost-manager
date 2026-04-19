@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 
 export default function Navbar() {
@@ -17,7 +18,8 @@ export default function Navbar() {
                 <div className="flex justify-between h-16">
                     <div className="flex">
                         <div className="flex-shrink-0 flex items-center">
-                            <Link href="/">
+                            <Link href="/" className="flex items-center gap-2">
+                                <Image src="/logo.png" alt="Pilates Cost Manager Logo" width={32} height={32} className="rounded" />
                                 <span className="font-bold text-xl text-white">Pilates Cost</span>
                             </Link>
                         </div>
