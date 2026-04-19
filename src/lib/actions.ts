@@ -115,7 +115,7 @@ export async function addBOMItem(equipmentId: string, partId: string, qty: numbe
         // Check if exists, update qty if does
         const existing = await sql`SELECT id, required_qty FROM pc_equipment_bom WHERE equipment_id = ${equipmentId} AND part_id = ${partId}`;
         
-        if (existing.rowCount > 0) {
+        if ((existing.rowCount ?? 0) > 0) {
             await sql`UPDATE pc_equipment_bom SET required_qty = ${qty} WHERE id = ${existing.rows[0].id}`;
         } else {
             await sql`INSERT INTO pc_equipment_bom (equipment_id, part_id, required_qty) VALUES (${equipmentId}, ${partId}, ${qty})`;
