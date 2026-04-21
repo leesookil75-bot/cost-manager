@@ -1,6 +1,8 @@
 import { getParts, getCategories } from '@/lib/actions';
 import PartsClient from './PartsClient';
 
+export const dynamic = 'force-dynamic';
+
 export default async function PartsPage() {
     const parts = await getParts();
     const categories = await getCategories();

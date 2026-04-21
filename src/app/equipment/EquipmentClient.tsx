@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Equipment, Part } from '@/lib/types';
 import { addEquipment, getEquipmentBOM, BOMDetails, addBOMItem, removeBOMItem } from '@/lib/actions';
 import * as XLSX from 'xlsx';
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export default function EquipmentClient({ initialEquipments, allParts }: Props) {
+    const router = useRouter();
     const [equipments, setEquipments] = useState<Equipment[]>(initialEquipments);
     const [isPending, startTransition] = useTransition();
     
@@ -29,7 +31,7 @@ export default function EquipmentClient({ initialEquipments, allParts }: Props) 
     const [searchTerm, setSearchTerm] = useState('');
 
     // Reload equipments when BOM changes directly by refetching page.
-    const reloadPage = () => window.location.reload();
+    const reloadPage = () => router.refresh();
 
     const handleAddEquipment = (e: React.FormEvent) => {
         e.preventDefault();
@@ -39,7 +41,7 @@ export default function EquipmentClient({ initialEquipments, allParts }: Props) 
             const res = await addEquipment(name, code);
             if (res.success) {
                 alert('기구가 등록되었습니다.');
-                window.location.reload();
+                router.refresh();
             } else {
                 alert('등록 실패: ' + res.error);
             }

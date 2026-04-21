@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import { Part } from '@/lib/types';
 import { addPart } from '@/lib/actions';
 
@@ -10,6 +11,7 @@ interface PartsClientProps {
 }
 
 export default function PartsClient({ initialParts, categories }: PartsClientProps) {
+    const router = useRouter();
     const [parts, setParts] = useState<Part[]>(initialParts);
     const [isPending, startTransition] = useTransition();
     
@@ -57,7 +59,7 @@ export default function PartsClient({ initialParts, categories }: PartsClientPro
                 setSubCategory('');
                 setUnitPrice('');
                 setSpecs('');
-                window.location.reload(); // Simple refresh to get new server data
+                router.refresh();
             } else {
                 alert('추가 실패: ' + res.error);
             }

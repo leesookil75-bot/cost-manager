@@ -1,0 +1,1 @@
+const { sql } = require('@vercel/postgres'); require('dotenv').config({ path: '.env.local' }); async function run() { try { const res = await sql`INSERT INTO pc_equipment (name, code) VALUES ('Test Equip', 'T-001') RETURNING *`; console.log(res.rows); } catch(e) { console.error(e); } } run();
