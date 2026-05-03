@@ -12,7 +12,6 @@ interface PartsClientProps {
 
 export default function PartsClient({ initialParts, categories }: PartsClientProps) {
     const router = useRouter();
-    const [parts, setParts] = useState<Part[]>(initialParts);
     const [isPending, startTransition] = useTransition();
     
     // Form state

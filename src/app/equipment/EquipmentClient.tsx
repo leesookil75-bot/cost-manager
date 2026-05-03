@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition, useEffect } from 'react';
+import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { Equipment, Part } from '@/lib/types';
 import { addEquipment, getEquipmentBOM, BOMDetails, addBOMItem, removeBOMItem } from '@/lib/actions';
@@ -13,7 +13,7 @@ interface Props {
 
 export default function EquipmentClient({ initialEquipments, allParts }: Props) {
     const router = useRouter();
-    const [equipments, setEquipments] = useState<Equipment[]>(initialEquipments);
+    const equipments = initialEquipments;
     const [isPending, startTransition] = useTransition();
     
     // New Equipment Form
@@ -80,9 +80,19 @@ export default function EquipmentClient({ initialEquipments, allParts }: Props) 
 
     const handleExportExcel = () => {
         if (!selectedEquipment) return;
-        
+
+        type ExcelRow = {
+            'No.': number | string;
+            '분류 태그': string;
+            '부품명': string;
+            '규격': string;
+            '개당 단가': number | string;
+            '투입 수량': number | string;
+            '합산 비용': number;
+        };
+
         // Prepare data rows
-        const rows = bomItems.map((item, index) => ({
+        const rows: ExcelRow[] = bomItems.map((item, index) => ({
             'No.': index + 1,
             '분류 태그': item.main_category || '-',
             '부품명': item.part_name,
@@ -94,7 +104,7 @@ export default function EquipmentClient({ initialEquipments, allParts }: Props) 
 
         // Calculate totals
         const totalCost = bomItems.reduce((acc, curr) => acc + Number(curr.total_price), 0);
-        
+
         rows.push({
             'No.': '총합',
             '분류 태그': '',
@@ -103,7 +113,7 @@ export default function EquipmentClient({ initialEquipments, allParts }: Props) 
             '개당 단가': '',
             '투입 수량': '',
             '합산 비용': totalCost
-        } as any);
+        });
 
         // Create workbook
         const ws = XLSX.utils.json_to_sheet(rows);

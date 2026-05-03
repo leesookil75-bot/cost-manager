@@ -1,7 +1,7 @@
 'use server';
 
 import { sql } from '@vercel/postgres';
-import { Part, Equipment, BOM } from './types';
+import { Part, Equipment } from './types';
 import { revalidatePath } from 'next/cache';
 
 // ========= PARTS =========
@@ -30,8 +30,8 @@ export async function addPart(data: {
         `;
         revalidatePath('/parts');
         return { success: true };
-    } catch (error: any) {
-        return { success: false, error: error.message };
+    } catch (error) {
+        return { success: false, error: error instanceof Error ? error.message : String(error) };
     }
 }
 
@@ -45,7 +45,7 @@ export async function getCategories() {
             mainCategories: mainRows.rows.map(r => r.main_category),
             subCategories: subRows.rows.map(r => r.sub_category)
         };
-    } catch (error) {
+    } catch {
         return { mainCategories: [], subCategories: [] };
     }
 }
@@ -75,8 +75,8 @@ export async function addEquipment(name: string, code: string) {
         await sql`INSERT INTO pc_equipment (name, code) VALUES (${name}, ${code})`;
         revalidatePath('/equipment');
         return { success: true };
-    } catch (error: any) {
-        return { success: false, error: error.message };
+    } catch (error) {
+        return { success: false, error: error instanceof Error ? error.message : String(error) };
     }
 }
 
@@ -105,7 +105,7 @@ export async function getEquipmentBOM(equipmentId: string): Promise<BOMDetails[]
             ORDER BY p.main_category ASC, p.name ASC;
         `;
         return rows as BOMDetails[];
-    } catch (error) {
+    } catch {
         return [];
     }
 }
@@ -122,8 +122,8 @@ export async function addBOMItem(equipmentId: string, partId: string, qty: numbe
         }
         revalidatePath('/equipment');
         return { success: true };
-    } catch (error: any) {
-        return { success: false, error: error.message };
+    } catch (error) {
+        return { success: false, error: error instanceof Error ? error.message : String(error) };
     }
 }
 
@@ -132,8 +132,8 @@ export async function removeBOMItem(bomId: string) {
         await sql`DELETE FROM pc_equipment_bom WHERE id = ${bomId}`;
         revalidatePath('/equipment');
         return { success: true };
-    } catch (error: any) {
-        return { success: false, error: error.message };
+    } catch (error) {
+        return { success: false, error: error instanceof Error ? error.message : String(error) };
     }
 }
 

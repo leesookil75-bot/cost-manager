@@ -1,6 +1,5 @@
 import { getEquipments, getParts } from '@/lib/actions';
 import EquipmentClient from './EquipmentClient';
-import { Part } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
 
